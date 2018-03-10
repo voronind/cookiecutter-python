@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+/build/
+/dist/
+/*.egg-info/
+
+# Editors
+/.idea/
+
+# pyenv
+/.python-version
+/.env
+
+# pytest
+/.pytest_cache/
+
+# mypy
+/.mypy_cache/
+
+# Virtual env
+/.venv/

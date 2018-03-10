@@ -1,0 +1,14 @@
+{
+    "project_name": "",
+    "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
+    "package_name": "{{ cookiecutter.project_slug.replace('-', '_') }}",
+    "version": "0.0.1",
+    "project_short_description": "Project short description",
+
+    "full_name": "",
+    "email": "",
+    "github_username": "",
+
+    "python_version": "3.6.4",
+    "python_max_line_length": 120
+}

@@ -1,0 +1,3 @@
+pytest ~= 3.4
+# testo
+cookiecutter ~= 1.6

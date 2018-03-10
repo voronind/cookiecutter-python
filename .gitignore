@@ -1,0 +1,8 @@
+# Editors
+/.idea/
+
+# pytest
+/.pytest_cache/
+
+# Virtual env
+/.venv/
