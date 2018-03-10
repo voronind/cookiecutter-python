@@ -1,5 +1,5 @@
-Cookiecutter Python Template
-============================
+Python Project Template
+=======================
 
 Using
 -----
