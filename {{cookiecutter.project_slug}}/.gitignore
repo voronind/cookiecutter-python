@@ -9,6 +9,8 @@ __pycache__/
 
 # pyenv
 /.python-version
+
+# pipenv
 /.env
 
 # pytest
