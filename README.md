@@ -12,6 +12,7 @@ cd project
 python -m venv .venv
 pipenv shell
 pipenv install --dev
+git init
 git add .
 git commit -m "Init commit"
 
