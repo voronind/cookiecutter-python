@@ -9,6 +9,7 @@
     "email": "",
     "github_username": "",
 
-    "python_version": "3.6.4",
+    "python_full_version": "3.6.4",
+    "python_version": "{{ '.'.join(cookiecutter.python_full_version.split('.')[:2]) }}",
     "python_max_line_length": 120
 }
