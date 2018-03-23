@@ -1,6 +1,6 @@
 
-from {{cookiecutter.package_name}}.main import add
+from {{cookiecutter.package_name}}.main import main
 
 
 def test_main():
-    assert add(2, 2) == 4
+    assert main() is None
