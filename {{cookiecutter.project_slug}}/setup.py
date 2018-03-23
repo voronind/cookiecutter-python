@@ -1,39 +1,35 @@
-from setuptools import setup, find_packages
-
-import json
 from pathlib import Path
+from setuptools import setup
 
+{% if cookiecutter.install_requires_from == 'Pipfile' %}
+def get_packages_from_Pipfile():
+    import toml
 
-def get_install_requires():
-
-    with open(Path(__file__).parent / 'Pipfile.lock') as pipfile_lock:
-        pipfile_content = json.load(pipfile_lock)
+    with open(Path(__file__).parent / 'Pipfile') as pipfile:
+        pipfile_content = toml.load(pipfile)
 
     requirements = []
-    for name, attrs in pipfile_content['default'].items():
+    for name, version in pipfile_content['packages'].items():
+        if version == '*':
+            requirements.append(name)
+        else:
+            requirements.append(name + version)
+
+    return requirements
+
+
+setup(install_requires=get_packages_from_Pipfile()){% elif cookiecutter.install_requires_from == 'Pipfile.lock' %}
+def get_packages_from_Pipfile_lock():
+    import json
+
+    with open(Path(__file__).parent / 'Pipfile.lock') as pipfile_lock:
+        pipfile_lock_content = json.load(pipfile_lock)
+
+    requirements = []
+    for name, attrs in pipfile_lock_content['default'].items():
         requirements.append(name + attrs['version'])
 
     return requirements
 
 
-setup(
-    name='{{cookiecutter.project_slug}}',
-    version='{{cookiecutter.version}}',
-
-    author='{{cookiecutter.full_name}}',
-    author_email='{{cookiecutter.email}}',
-
-    url='https://github.com/{{cookiecutter.github_username}}/{{cookiecutter.project_slug}}',
-    description={{cookiecutter.project_short_description.__repr__()}},
-
-    packages=find_packages(),
-    install_requires=get_install_requires(),
-
-    license='MIT License',
-    classifiers=[
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: Implementation :: PyPy',
-    ],
-    keywords='',
-)
+setup(install_requires=get_packages_from_Pipfile_lock()){% endif %}
