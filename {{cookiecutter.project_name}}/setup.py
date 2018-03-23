@@ -1,7 +1,7 @@
 from pathlib import Path
 from setuptools import setup
 
-{% if cookiecutter.install_requires_from == 'Pipfile' %}
+{% if cookiecutter.license != 'Not open source' %}
 def get_packages_from_Pipfile():
     import toml
 
@@ -20,7 +20,7 @@ def get_packages_from_Pipfile():
 
 setup(install_requires=get_packages_from_Pipfile())
 
-{%- elif cookiecutter.install_requires_from == 'Pipfile.lock' %}
+{%- else %}
 def get_packages_from_Pipfile_lock():
     import json
 
