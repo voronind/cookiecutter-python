@@ -4,23 +4,23 @@ from pytest import fixture
 
 
 @fixture(scope='session')
-def project_name():
+def project_title():
     return 'Charged Project'
 
 
 @fixture(scope='session')
-def project_slug(project_name):
-    return project_name.lower().replace(' ', '-')
+def project_name(project_title):
+    return project_title.lower().replace(' ', '-')
 
 
 @fixture(scope='session')
-def package_name(project_slug):
-    return project_slug.replace('-', '_')
+def package_name(project_name):
+    return project_name.replace('-', '_')
 
 
 @fixture(scope='session')
-def extra_context(project_name):
-    return {'project_name': project_name}
+def extra_context(project_title):
+    return {'project_title': project_title}
 
 
 @fixture(scope='session')
@@ -29,8 +29,8 @@ def output_dir(tmpdir_factory):
 
 
 @fixture(scope='session')
-def project_path(output_dir, project_slug):
-    return Path(output_dir, project_slug)
+def project_path(output_dir, project_name):
+    return Path(output_dir, project_name)
 
 
 @fixture(scope='session', autouse=True)

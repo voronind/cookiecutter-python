@@ -1,9 +1,9 @@
 {
-    "project_name": "",
-    "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
-    "package_name": "{{ cookiecutter.project_slug.replace('-', '_') }}",
+    "project_title": "",
+    "project_name": "{{ cookiecutter.project_title.lower().replace(' ', '-') }}",
+    "package_name": "{{ cookiecutter.project_name.replace('-', '_') }}",
     "version": "0.0.1",
-    "project_short_description": "Project short description",
+    "project_description": "Project description",
     "install_requires_from": ["Pipfile", "Pipfile.lock"],
 
     "full_name": "",

@@ -1,7 +1,7 @@
-{{cookiecutter.project_name}}
+{{cookiecutter.project_title}}
 =============================
 
-{{cookiecutter.project_short_description}}
+{{cookiecutter.project_description}}
 
 Development
 -----------
