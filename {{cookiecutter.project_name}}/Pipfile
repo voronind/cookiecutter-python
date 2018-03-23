@@ -17,7 +17,9 @@ mypy = "*"
 pytest = "*"
 pytest-cov = "*"
 "pytest-flake8" = "*"
-{% if cookiecutter.install_requires_from == 'Pipfile' %}toml = "*"{% endif %}
+{% if cookiecutter.install_requires_from == 'Pipfile' -%}
+toml = "*"
+{% endif %}
 
 [requires]
 

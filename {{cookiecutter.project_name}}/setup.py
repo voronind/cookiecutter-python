@@ -18,7 +18,9 @@ def get_packages_from_Pipfile():
     return requirements
 
 
-setup(install_requires=get_packages_from_Pipfile()){% elif cookiecutter.install_requires_from == 'Pipfile.lock' %}
+setup(install_requires=get_packages_from_Pipfile())
+
+{%- elif cookiecutter.install_requires_from == 'Pipfile.lock' %}
 def get_packages_from_Pipfile_lock():
     import json
 
@@ -32,4 +34,5 @@ def get_packages_from_Pipfile_lock():
     return requirements
 
 
-setup(install_requires=get_packages_from_Pipfile_lock()){% endif %}
+setup(install_requires=get_packages_from_Pipfile_lock())
+{%- endif %}
