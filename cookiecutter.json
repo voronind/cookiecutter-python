@@ -5,6 +5,7 @@
     "version": "0.0.1",
     "project_description": "Project description",
     "install_requires_from": ["Pipfile", "Pipfile.lock"],
+    "license": ["MIT license", "Not open source"],
 
     "full_name": "",
     "email": "",
