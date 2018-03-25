@@ -17,7 +17,7 @@ mypy = "*"
 pytest = "*"
 pytest-cov = "*"
 "pytest-flake8" = "*"
-{% if cookiecutter.license != 'Not open source' -%}
+{% if cookiecutter.open_source == 'y' -%}
 toml = "*"
 {% endif %}
 

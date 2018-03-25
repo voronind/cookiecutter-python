@@ -1,7 +1,7 @@
 from pathlib import Path
 from setuptools import setup
 
-{% if cookiecutter.license != 'Not open source' %}
+{% if cookiecutter.open_source == 'y' %}
 def get_packages_from_Pipfile():
     import toml
 

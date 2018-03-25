@@ -4,7 +4,7 @@
     "package_name": "{{ cookiecutter.project_name.replace('-', '_') }}",
     "version": "0.0.1",
     "project_description": "Project description",
-    "license": ["MIT license", "Not open source"],
+    "open_source": "y",
 
     "full_name": "",
     "email": "",
