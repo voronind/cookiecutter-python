@@ -22,13 +22,10 @@ git push -u origin master
 
 Tests
 -----
-- Create virtual environment and activate it
-- Install dependencies from `requirements.txt`
-- Run `pytest`
 
 ```commandline
 python -m venv .venv
-. .venv/bin/activate
-pip install -r requirements.txt
+pipenv shell
+pipenv install
 pytest
 ```
