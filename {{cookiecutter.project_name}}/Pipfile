@@ -24,3 +24,4 @@ pipenv = "*"
 [requires]
 
 python_version = "{{cookiecutter.python_version}}"
+python_full_version = "{{cookiecutter.python_full_version}}"

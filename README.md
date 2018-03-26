@@ -6,19 +6,6 @@ Using
 ```commandline
 cookiecutter gh:dimka665/cookiecutter-python
 ```
-Init project
-```commandline
-cd project
-python -m venv .venv
-pipenv shell
-pipenv install --dev
-git init
-git add .
-git commit -m "Init commit"
-
-git remote add origin git@github.com:user/project.git
-git push -u origin master
-```
 
 Tests
 -----

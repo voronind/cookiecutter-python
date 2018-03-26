@@ -7,19 +7,17 @@ Development
 -----------
 We need installed `pyenv` and `pipenv`.
 ```commandline
-pyenv install 3.6.4
-pyenv shell 3.6.4
+git clone {{cookiecutter.git_repo}}
+cd {{cookiecutter.project_name}}
 python -m venv .venv
-pipenv shell
+echo 'PYTHONPATH=.' > .env
 pipenv install --dev
+pipenv shell
 ```
 
 When `pipenv` will use `pyenv` to install Python versions
-and generate short virtual environment names we will prompt:
-```commandline
-pipenv shell
-pipenv install --dev
-```
+and generate short virtual environment names we will not
+create virtual environment manually.
 
 Tests
 -----
