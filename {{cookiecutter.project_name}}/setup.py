@@ -3,19 +3,12 @@ from setuptools import setup
 
 {% if cookiecutter.open_source == 'y' %}
 def get_packages_from_Pipfile():
-    import toml
+    from pipenv.project import Project
+    from pipenv.utils import convert_deps_to_pip
 
-    with open(Path(__file__).parent / 'Pipfile') as pipfile:
-        pipfile_content = toml.load(pipfile)
-
-    requirements = []
-    for name, version in pipfile_content['packages'].items():
-        if version == '*':
-            requirements.append(name)
-        else:
-            requirements.append(name + version)
-
-    return requirements
+    project = Project(chdir=False)
+    pipfile = project.parsed_pipfile
+    return convert_deps_to_pip(pipfile['packages'], r=False)
 
 
 setup(install_requires=get_packages_from_Pipfile())

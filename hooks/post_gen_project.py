@@ -9,8 +9,12 @@ def on_private():
     os.remove('LICENSE')
 
 
-if __name__ == '__main__':
+def main():
     if '{{ cookiecutter.open_source }}' == 'y':
         on_open_source()
     else:
         on_private()
+
+
+if __name__ == '__main__':
+    main()
