@@ -24,8 +24,6 @@ Tests
 -----
 
 ```commandline
-python -m venv .venv
-pipenv shell
 pipenv install
-pytest
+pipenv run pytest
 ```
