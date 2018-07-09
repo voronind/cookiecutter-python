@@ -9,14 +9,11 @@ def on_private():
     os.remove('LICENSE')
 
 
-def print_next_steps():
-
-    print("""
+NEXT_STEPS = """
 \033[1;32m  Next steps:  \033[1;m
 
 cd {{cookiecutter.project_name}}
 
-python -m venv .venv
 pipenv install --dev
 
 git init
@@ -25,9 +22,7 @@ git commit -m "Init commit"
 
 git remote add origin {{cookiecutter.git_repo}}
 git push -u origin master
-
-pipenv shell    
-""")
+"""
 
 
 def main():
@@ -36,7 +31,7 @@ def main():
     else:
         on_private()
 
-    print_next_steps()
+    print(NEXT_STEPS)
 
 
 if __name__ == '__main__':
