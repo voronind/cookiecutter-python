@@ -3,30 +3,38 @@
 
 {{cookiecutter.project_description}}
 
+Install
+-------
+```commandline
+pip install {{cookiecutter.package_name}}
+```
+
 Development
 -----------
 We need installed `pyenv` and `pipenv`.
-```commandline
+```console
 git clone {{cookiecutter.git_repo}}
 cd {{cookiecutter.project_name}}
-python -m venv .venv
-echo 'PYTHONPATH=.' > .env
+
 pipenv install --dev
-pipenv shell
+echo 'PYTHONPATH=.' > .env
 ```
 
-When `pipenv` will use `pyenv` to install Python versions
-and generate short virtual environment names we will not
-create virtual environment manually.
+Run tests:
+```console
+pipenv run pytest
+```
 
-Tests
------
-```commandline
-pytest
+Publish
+-------
+```console
+python3 setup.py bdist_wheel
+twine upload dist/*
+rm dist/*
 ```
 
 Deployment
 ----------
-```commandline
+```console
 pipenv install --system --deploy
 ```

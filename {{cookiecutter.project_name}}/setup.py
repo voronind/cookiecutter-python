@@ -1,4 +1,3 @@
-from pathlib import Path
 from setuptools import setup
 
 {% if cookiecutter.open_source == 'y' %}
@@ -16,6 +15,7 @@ setup(install_requires=get_packages_from_Pipfile())
 {%- else %}
 def get_packages_from_Pipfile_lock():
     import json
+    from pathlib import Path
 
     with open(Path(__file__).parent / 'Pipfile.lock') as pipfile_lock:
         pipfile_lock_content = json.load(pipfile_lock)

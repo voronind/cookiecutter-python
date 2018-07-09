@@ -7,9 +7,6 @@ __pycache__/
 # Editors
 /.idea/
 
-# pyenv
-/.python-version
-
 # pipenv
 /.env
 
@@ -19,6 +16,3 @@ __pycache__/
 
 # mypy
 /.mypy_cache/
-
-# Virtual env
-/.venv/

@@ -17,11 +17,7 @@ mypy = "*"
 pytest = "*"
 pytest-cov = "*"
 "pytest-flake8" = "*"
-{% if cookiecutter.open_source == 'y' -%}
-pipenv = "*"
-{% endif %}
 
 [requires]
 
-python_version = "{{cookiecutter.python_version}}"
-python_full_version = "{{cookiecutter.python_full_version}}"
+python_version = ">={{cookiecutter.python_version}}"
