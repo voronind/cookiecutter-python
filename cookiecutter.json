@@ -5,6 +5,7 @@
     "version": "0.0.1",
     "project_description": "Project description",
     "open_source": "y",
+    "docs": "{{ cookiecutter.open_source }}",
 
     "full_name": "",
     "email": "",

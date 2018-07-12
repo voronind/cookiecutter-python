@@ -20,4 +20,4 @@ pytest-cov = "*"
 
 [requires]
 
-python_version = ">={{cookiecutter.python_version}}"
+python_version = "{{cookiecutter.python_version}}"

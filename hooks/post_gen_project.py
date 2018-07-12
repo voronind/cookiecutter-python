@@ -5,8 +5,13 @@ def on_open_source():
     pass
 
 
-def on_private():
+def on_private_project():
     os.remove('LICENSE')
+    os.remove('setup.py')
+
+
+def sphinx_quickstart():
+    pass
 
 
 NEXT_STEPS = """
@@ -15,6 +20,9 @@ NEXT_STEPS = """
 cd {{cookiecutter.project_name}}
 
 pipenv install --dev
+{% if cookiecutter.docs == 'y' %}
+pipenv run sphinx-quickstart --quiet -p '{{cookiecutter.project_title}}' -a '{{cookiecutter.full_name}}' -r '{{cookiecutter.version}}' docs
+{% endif %}
 
 git init
 git add .
@@ -29,7 +37,7 @@ def main():
     if '{{ cookiecutter.open_source }}' == 'y':
         on_open_source()
     else:
-        on_private()
+        on_private_project()
 
     print(NEXT_STEPS)
 

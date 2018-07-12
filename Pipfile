@@ -1,20 +1,14 @@
 [[source]]
-
 name = "pypi"
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 
-
 [dev-packages]
-
-
+ipython = "*"
+pytest = "~=3.4"
+cookiecutter = "*"
 
 [packages]
 
-pytest = "~=3.4"
-cookiecutter = "~=1.6"
-
-
 [requires]
-
 python_version = "3.6"

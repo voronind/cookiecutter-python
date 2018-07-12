@@ -9,6 +9,9 @@ __pycache__/
 
 # pipenv
 /.env
+{% if cookiecutter.open_source == 'y' -%}
+/Pipfile.lock
+{%- endif %}
 
 # pytest
 /.coverage

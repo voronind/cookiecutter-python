@@ -1,40 +1,72 @@
 from pathlib import Path
 
+from cookiecutter.main import cookiecutter
+
 from pytest import fixture
 
 
 @fixture(scope='session')
 def project_title():
-    return 'Charged Project'
+    return 'Project Title'
 
 
-@fixture(scope='session')
-def project_name(project_title):
-    return project_title.lower().replace(' ', '-')
+@fixture
+def project_name(open_source, docs):
+    name = 'project'
+
+    if open_source == 'y':
+        name += '-opensource'
+    elif open_source == 'n':
+        name += '-private'
+
+    if docs == 'y':
+        name += '-docs'
+    elif docs == 'n':
+        name += '-nodocs'
+
+    return name
 
 
-@fixture(scope='session')
+@fixture
 def package_name(project_name):
     return project_name.replace('-', '_')
 
 
-@fixture(scope='session')
-def extra_context(project_title):
-    return {'project_title': project_title}
+@fixture
+def docs():
+    return None
 
 
-@fixture(scope='session')
-def output_dir(tmpdir_factory):
-    return tmpdir_factory.mktemp('cookiecutter', numbered=False)
+@fixture
+def context(project_title, project_name, package_name, open_source, docs):
+    context_ = {
+        'project_title': project_title,
+        'project_name': project_name,
+        'package_name': package_name,
+    }
+
+    if open_source is not None:
+        context_['open_source'] = open_source
+
+    if docs is not None:
+        context_['docs'] = docs
+
+    return context_
 
 
-@fixture(scope='session')
-def project_path(output_dir, project_name):
-    return Path(output_dir, project_name)
+@fixture
+def project_path(tmpdir_factory, project_name, context):
+
+    basetemp = tmpdir_factory.getbasetemp()
+    project_dir = basetemp.join(project_name)
+
+    if not project_dir.isdir():
+        cookiecutter('.', output_dir=str(basetemp), no_input=True, extra_context=context)
+
+    return Path(project_dir)
 
 
-@fixture(scope='session', autouse=True)
-def render_project(output_dir, extra_context):
-    from cookiecutter.main import cookiecutter
-
-    cookiecutter('.', output_dir=output_dir, no_input=True, extra_context=extra_context)
+@fixture
+def gitignore_content(project_path):
+    with open(project_path / '.gitignore') as gitignore:
+        yield gitignore.read()
