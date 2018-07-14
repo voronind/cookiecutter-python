@@ -11,13 +11,27 @@ name = "pypi"
 
 [dev-packages]
 
-bumpr = "*"
-ipython = "*"
-mypy = "*"
 pytest = "*"
 pytest-cov = "*"
 "pytest-flake8" = "*"
+mypy = "*"
+{% if cookiecutter.docs == 'y' -%}
+sphinx = "*"
+sphinx-autobuild = "*"
+{% endif -%}
+ipython = "*"
+bumpr = "*"
 
 [requires]
 
 python_version = "{{cookiecutter.python_version}}"
+
+[scripts]
+
+test = "pytest --flake8"
+{%- if cookiecutter.open_source == 'y' %}
+publish = "python setup.py bdist_wheel"
+{%- endif %}
+{%- if cookiecutter.docs == 'y' %}
+docs = "sphinx-autobuild --open-browser --port 0 --delay 1 docs docs/_build/html"
+{%- endif %}

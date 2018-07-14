@@ -20,9 +20,9 @@ NEXT_STEPS = """
 cd {{cookiecutter.project_name}}
 
 pipenv install --dev
-{% if cookiecutter.docs == 'y' %}
+{%- if cookiecutter.docs == 'y' %}
 pipenv run sphinx-quickstart --quiet -p '{{cookiecutter.project_title}}' -a '{{cookiecutter.full_name}}' -r '{{cookiecutter.version}}' docs
-{% endif %}
+{%- endif %}
 
 git init
 git add .
