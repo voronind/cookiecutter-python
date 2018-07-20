@@ -13,8 +13,8 @@ Development
 -----------
 We need installed `pyenv` and `pipenv`.
 ```console
-git clone {{cookiecutter.git_repo}}
-cd {{cookiecutter.project_name}}
+git clone {{ cookiecutter.git_ssh }}
+cd {{ cookiecutter.project_name }}
 
 pipenv install --dev
 echo 'PYTHONPATH=.' > .env

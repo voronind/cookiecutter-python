@@ -28,7 +28,7 @@ git init
 git add .
 git commit -m "Init commit"
 
-git remote add origin {{cookiecutter.git_repo}}
+git remote add origin {{ cookiecutter.git_ssh }}
 git push -u origin master
 """
 
