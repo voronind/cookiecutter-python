@@ -20,5 +20,8 @@ __pycache__/
 # mypy
 /.mypy_cache/
 
+# tox
+/.tox/
+
 # Sphinx
 /docs/_build/

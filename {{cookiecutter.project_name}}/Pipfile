@@ -6,15 +6,18 @@ name = "pypi"
 [packages]
 
 [dev-packages]
+ipython = "*"
 pytest = "*"
 pytest-cov = "*"
 "pytest-flake8" = "*"
 mypy = "*"
+{% if cookiecutter.open_source == 'y' -%}
+tox = "*"
+{% endif -%}
 {% if cookiecutter.docs == 'y' -%}
 sphinx = "*"
 sphinx-autobuild = "*"
 {% endif -%}
-ipython = "*"
 bumpr = "*"
 
 [requires]
