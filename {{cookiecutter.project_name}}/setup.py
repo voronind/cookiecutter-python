@@ -1,23 +1,12 @@
-from pathlib import Path
-
 from setuptools import setup
 
-import toml
+from pipenv.project import Project
+from pipenv.utils import convert_deps_to_pip
 
 
 def get_packages_from_Pipfile():
-
-    with open(str(Path(__file__).parent / 'Pipfile')) as pipfile:
-        pipfile_content = toml.load(pipfile)
-
-    requirements = []
-    for name, version in pipfile_content['packages'].items():
-        if version == '*':
-            requirements.append(name)
-        else:
-            requirements.append(name + version)
-
-    return requirements
+    pipfile = Project(chdir=False).parsed_pipfile
+    return convert_deps_to_pip(pipfile['packages'], r=False)
 
 
 setup(install_requires=get_packages_from_Pipfile())
