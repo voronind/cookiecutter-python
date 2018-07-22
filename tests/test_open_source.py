@@ -12,6 +12,7 @@ def open_source():
 def test_specific_files(project_path):
 
     assert (project_path / 'LICENSE').is_file()
+    assert (project_path / 'publish.sh').is_file()
     assert (project_path / 'setup.py').is_file()
 
 

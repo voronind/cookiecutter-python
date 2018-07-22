@@ -7,6 +7,7 @@ def on_open_source():
 
 def on_private_project():
     os.remove('LICENSE')
+    os.remove('publish.sh')
     os.remove('setup.py')
 
 
