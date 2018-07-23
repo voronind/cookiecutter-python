@@ -14,28 +14,12 @@ Development
 We need installed `pyenv` and `pipenv`.
 ```console
 git clone {{ cookiecutter.git_ssh }}
-cd {{ cookiecutter.project_name }}
 
+cd {{ cookiecutter.project_name }}
 pipenv install --dev
-echo 'PYTHONPATH=.' > .env
 ```
 
 Run tests:
 ```console
-pipenv run pytest
-```
-
-Publish
--------
-```console
-python3 setup.py bdist_wheel
-twine upload dist/*
-rm dist/*
-rm -rf *.egg-info/
-```
-
-Deployment
-----------
-```console
-pipenv install --system --deploy
+pipenv run test
 ```

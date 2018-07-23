@@ -1,0 +1,14 @@
+dist: bionic
+sudo: false
+cache:
+    pip: true
+
+language: python
+python:
+    - "{{ cookiecutter.python_version }}"
+
+install:
+    - python3 -m pip install tox tox-travis
+
+script:
+    - tox
