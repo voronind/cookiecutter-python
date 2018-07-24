@@ -1,12 +1,18 @@
 {{cookiecutter.project_title}}
 =============================
 
-{{cookiecutter.project_description}}
+{%- if cookiecutter.open_source == 'y' %}
+[![PyPI](https://img.shields.io/pypi/pyversions/{{ cookiecutter.project-name }}.svg)](https://pypi.org/project/{{ cookiecutter.project_name }}/ "Latest version on PyPI")
+[![Travis](https://travis-ci.org/{{ cookiecutter.github_username }}/{{ cookiecutter.project_name }}.svg?branch=master)](https://travis-ci.org/{{ cookiecutter.github_username }}/{{ cookiecutter.project_name }} "Travis")
+[![Docs](https://readthedocs.org/projects/{{ cookiecutter.project_name }}/badge/?version=stable)](https://{{ cookiecutter.project_name }}.readthedocs.io/en/latest/ "Read the docs")
+{%- endif %}
+
+{{ cookiecutter.project_description }}
 
 Install
 -------
 ```commandline
-pip install {{cookiecutter.package_name}}
+pip install {{ cookiecutter.package_name }}
 ```
 
 Development
