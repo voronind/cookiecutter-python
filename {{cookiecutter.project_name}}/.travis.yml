@@ -1,14 +1,39 @@
 dist: bionic
 sudo: false
 cache:
-    pip: true
+    directories:
+        - $HOME/.cache/pip
+        - $HOME/.cache/pipenv
 
 language: python
 python:
+    # First value is default
     - "{{ cookiecutter.python_version }}"
 
 install:
-    - python3 -m pip install tox tox-travis
+    - pip install pipenv
+    - pipenv install --dev --skip-lock
 
 script:
-    - tox
+    - pipenv run fulltest
+
+jobs:
+    include:
+        {%- if cookiecutter.docs == 'y' %}
+        - stage: Test
+          name: Test docs
+          install:
+              - pip install pipenv sphinx
+              - pipenv install --skip-lock
+          script:
+              - pipenv run doctest
+              - pipenv run build-docs
+
+        {% endif -%}
+        - stage: Coverage
+          name: сodecov
+          before_script:
+              - pip install codecov
+          script:
+              - pytest --cov
+              - codecov --required
