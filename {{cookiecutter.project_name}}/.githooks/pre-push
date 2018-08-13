@@ -2,7 +2,7 @@
 
 set -o errexit
 
-pipenv run test
+pipenv run fulltest
 {%- if cookiecutter.docs == 'y' %}
 pipenv run doctest
 pipenv run build-docs
