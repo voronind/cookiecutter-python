@@ -27,5 +27,5 @@ pipenv install --dev
 
 Run tests:
 ```console
-pipenv run test
+pipenv run fulltest
 ```
