@@ -22,7 +22,8 @@ bumpr = "*"
 python_version = "{{cookiecutter.python_version}}"
 
 [scripts]
-test = "pytest --flake8"
+test = "pytest --exitfirst --failed-first"
+fulltest = "pytest --flake8 --cov --cov-fail-under=80 --no-cov-on-fail {{cookiecutter.package_name}} tests docs/conf.py"
 # We use equivalent of "make mode":
 # sphinx-build -M builder source build  =>
 # sphinx-build -b builder -d source/doctrees source build/builder
