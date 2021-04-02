@@ -20,9 +20,9 @@ NEXT_STEPS = """
 
 cd {{cookiecutter.project_name}}
 
-poetry install --dev
+poetry install --no-root
 {%- if cookiecutter.docs == 'y' %}
-pipenv run sphinx-quickstart --quiet -p '{{cookiecutter.project_title}}' -r '{{cookiecutter.version}}' -a '{{cookiecutter.full_name}}' --ext-doctest docs
+poetry run sphinx-quickstart --quiet -p '{{cookiecutter.project_title}}' -r '{{cookiecutter.version}}' -a '{{cookiecutter.full_name}}' --ext-doctest docs
 {%- endif %}
 
 git init
