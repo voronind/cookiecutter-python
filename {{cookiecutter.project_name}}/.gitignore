@@ -1,24 +1,16 @@
+# Editors
+/.idea/
+
 # Python
 __pycache__/
 /build/
 /dist/
 /*.egg-info/
-
-# Editors
-/.idea/
-
-# pipenv
-/.env
-{% if cookiecutter.open_source == 'y' -%}
-/Pipfile.lock
-{%- endif %}
+/.mypy_cache/
 
 # pytest
 /.coverage
 /.pytest_cache/
-
-# mypy
-/.mypy_cache/
 
 # tox
 /.tox/
