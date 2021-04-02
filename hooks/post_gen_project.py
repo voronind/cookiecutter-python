@@ -20,7 +20,7 @@ NEXT_STEPS = """
 
 cd {{cookiecutter.project_name}}
 
-pipenv install --dev
+poetry install --dev
 {%- if cookiecutter.docs == 'y' %}
 pipenv run sphinx-quickstart --quiet -p '{{cookiecutter.project_title}}' -r '{{cookiecutter.version}}' -a '{{cookiecutter.full_name}}' --ext-doctest docs
 {%- endif %}

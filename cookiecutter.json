@@ -2,7 +2,6 @@
     "project_title": "",
     "project_name": "{{ cookiecutter.project_title.lower().replace(' ', '-') }}",
     "package_name": "{{ cookiecutter.project_name.replace('-', '_') }}",
-    "version": "0.1-dev",
     "project_description": "Project description",
 
     "open_source": "y",
@@ -12,7 +11,6 @@
     "email": "",
 
     "github_username": "",
-    "bitbucket_username": "",
 
     "python_version": "3.6"
 }

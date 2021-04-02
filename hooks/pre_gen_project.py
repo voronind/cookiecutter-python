@@ -3,7 +3,7 @@ import sys
 
 
 {% set git_hosting = ('bitbucket.org', 'github.com')[cookiecutter.open_source == 'y'] %}
-{% set git_username = (cookiecutter.bitbucket_username, cookiecutter.github_username)[cookiecutter.open_source == 'y'] %}
+{% set git_username = cookiecutter.github_username %}
 
 {% set git_ssh  -%}     git@{{ git_hosting }}:{{ git_username }}/{{ cookiecutter.project_name }}.git {%- endset %}
 {% set git_http -%} https://{{ git_hosting }}/{{ git_username }}/{{ cookiecutter.project_name }}     {%- endset %}
