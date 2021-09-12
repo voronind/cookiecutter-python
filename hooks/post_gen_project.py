@@ -6,9 +6,7 @@ def on_open_source():
 
 
 def on_private_project():
-    os.remove('.travis.yml')
-    os.remove('LICENSE')
-    os.remove('setup.py')
+    pass
 
 
 def sphinx_quickstart():
