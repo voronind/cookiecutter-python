@@ -42,10 +42,6 @@ sphinx-autobuild = "*"
 testpaths = "tests"
 norecursedirs = [".*/", "docs/"]
 
-[tool.flake8]
-max-line-length = 120
-exclude = [".*/", "docs/_build/"]
-
 [tool.coverage.run]
 branch = true
 source = "{{cookiecutter.package_name}}/"
