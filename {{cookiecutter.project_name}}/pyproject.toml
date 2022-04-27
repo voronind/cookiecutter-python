@@ -38,14 +38,6 @@ sphinx = "*"
 sphinx-autobuild = "*"
 {% endif -%}
 
-[tool.pytest]
-testpaths = "tests"
-norecursedirs = [".*/", "docs/"]
-
-[tool.coverage.run]
-branch = true
-source = "{{cookiecutter.package_name}}/"
-
 [tool.mypy]
 check_untyped_defs = true
 
