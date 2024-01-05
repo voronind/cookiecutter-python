@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "cookiecutter-python"
+version = "0.1.0"
+description = ""
+authors = ["Dmitry Voronin <dimka665@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "cookiecutter_python"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.19.0"
+pytest = "^7.4.4"
+cookiecutter = "^2.5.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
