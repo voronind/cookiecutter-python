@@ -1,17 +1,41 @@
 {
     "project_title": "",
     "project_name": "{{ cookiecutter.project_title.lower().replace(' ', '-') }}",
-    "package_name": "{{ cookiecutter.project_name.replace('-', '_') }}",
-    "version": "0.1-dev",
-    "project_description": "Project description",
+    "__package_name": "{{ cookiecutter.project_name.replace('-', '_') }}",
+    "project_description": "",
 
-    "open_source": "y",
-    "docs": "{{ cookiecutter.open_source }}",
+    "license": ["MIT", "Proprietary"],
+    "poetry_dynamic_versioning": "y",
+
+    "pytest": "y",
+    "codecov": "{{ 'y' if cookiecutter.pytest == 'y' else 'n' }}",
+
+    "sphinx": "n",
+    "rtd": "{{ 'y' if cookiecutter.sphinx == 'y' else 'n' }}",
 
     "full_name": "",
     "email": "",
 
-    "github_username": "",
+    "git_hosting": ["github.com", "gitlab.com"],
+    "git_user": "",
+    "__git_ssh": "git@{{ cookiecutter.git_hosting }}:{{ cookiecutter.git_user }}/{{ cookiecutter.project_name }}.git",
+    "__git_http": "https://{{ cookiecutter.git_hosting }}/{{ cookiecutter.git_user }}/{{ cookiecutter.project_name }}",
 
-    "python_version": "3.6"
+    "__prompts__": {
+        "project_title": "Project Title",
+        "project_name": "Project Name",
+        "project_description": "Project Description",
+
+        "poetry_dynamic_versioning": "Use poetry-dynamic-versioning?",
+        "pytest": "Use pytest?",
+        "codecov": "Use codecov?",
+
+        "sphinx": "Use Sphinx?",
+        "rtd": "Use Read the Docs?",
+        "full_name": "Full Name",
+        "email": "E-mail",
+
+        "git_hosting": "Select git hosting",
+        "git_user": "Git user"
+    }
 }

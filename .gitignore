@@ -1,8 +1,9 @@
+.*
+!.editorconfig
+!.gitignore
+!/.coveragerc
+!/.flake8
+!/.pre-commit-config.yaml
+
 # Python
 __pycache__/
-
-# Editors
-/.idea/
-
-# pytest
-/.pytest_cache/

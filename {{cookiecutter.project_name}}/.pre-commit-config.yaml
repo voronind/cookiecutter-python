@@ -1,39 +1,29 @@
-exclude: |
-    (?x)^(
-        node_modules/
-        |tests/
-    )
 repos:
     -   repo: https://github.com/asottile/pyupgrade
-        rev: v2.29.1
+        rev: v3.15.0
         hooks:
             -   id: pyupgrade
                 args: [--py36-plus]
 
     -   repo: https://github.com/PyCQA/pylint
-        rev: v2.10.2
+        rev: v3.0.3
         hooks:
             -   id: pylint
 
     -   repo: https://github.com/PyCQA/flake8
-        rev: 3.9.2
+        rev: 5.0.4
         hooks:
             -   id: flake8
                 additional_dependencies:
-                    - flake8-broken-line==0.3.0
-                    - flake8-quotes==3.3.1
+                    - flake8-broken-line==0.5.0
+                    - flake8-quotes==3.3.2
 
-#    -   repo: https://github.com/google/yapf
-#        rev: v0.31.0
-#        hooks:
-#            -   id: yapf
-##                additional_dependencies:
-##                    - toml
-
-    # gitlab-ci-linter needs Gitlab private token https://gitlab.com/devopshq/gitlab-ci-linter/-/issues/3
+  {% if cookiecutter.git_hosting == 'gitlab.com' -%}
+    # gitlab-ci-linter needs defined GITLAB_PRIVATE_TOKEN environment variable
     -   repo: https://gitlab.com/devopshq/gitlab-ci-linter
-        rev: v1.0.4
+        rev: v1.0.6
         hooks:
             -   id: gitlab-ci-linter
                 args:
-                    - '--project='
+                    - '--project={{ cookiecutter.git_user }}/{{ cookiecutter.project_name }}'
+  {% endif -%}

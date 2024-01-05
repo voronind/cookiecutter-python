@@ -7,21 +7,14 @@ Using
 cookiecutter gh:voronind/cookiecutter-python
 ```
 
-Open Source Project
--------------------
+Development
+-----------
+```commandline
+poetry install --no-root
+```
 
-- setup.py
-- use dependencies from Pipfile
-
-Private Project
----------------
-
-- None
-
-Tests
------
+### Testing
 
 ```commandline
-pipenv install
-pipenv run pytest
+poetry run pytest
 ```

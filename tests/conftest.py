@@ -1,72 +1,23 @@
-from pathlib import Path
-
-from cookiecutter.main import cookiecutter
+import os
 
 from pytest import fixture
 
 
-@fixture(scope='session')
-def project_title():
-    return 'Project Title'
+@fixture(scope='session', autouse=True)
+def environment_variable():
+    os.environ['TESTING'] = '1'
 
 
-@fixture
-def project_name(open_source, docs):
-    name = 'project'
+@fixture()
+def project_path(cookies):
+    extra_context = {
+        'project_title': 'Project',
 
-    if open_source == 'y':
-        name += '-opensource'
-    elif open_source == 'n':
-        name += '-private'
-
-    if docs == 'y':
-        name += '-docs'
-    elif docs == 'n':
-        name += '-nodocs'
-
-    return name
-
-
-@fixture
-def package_name(project_name):
-    return project_name.replace('-', '_')
-
-
-@fixture
-def docs():
-    return None
-
-
-@fixture
-def context(project_title, project_name, package_name, open_source, docs):
-    context_ = {
-        'project_title': project_title,
-        'project_name': project_name,
-        'package_name': package_name,
     }
+    def _cookies_project_path(**context):
+        result = cookies.bake(extra_context=dict(**extra_context, **context))
+        assert result.exit_code == 0
+        assert result.exception is None
+        return result.project_path
 
-    if open_source is not None:
-        context_['open_source'] = open_source
-
-    if docs is not None:
-        context_['docs'] = docs
-
-    return context_
-
-
-@fixture
-def project_path(tmpdir_factory, project_name, context):
-
-    basetemp = tmpdir_factory.getbasetemp()
-    project_dir = basetemp.join(project_name)
-
-    if not project_dir.isdir():
-        cookiecutter('.', output_dir=str(basetemp), no_input=True, extra_context=context)
-
-    return Path(project_dir)
-
-
-@fixture
-def gitignore_content(project_path):
-    with open(project_path / '.gitignore') as gitignore:
-        yield gitignore.read()
+    return _cookies_project_path
