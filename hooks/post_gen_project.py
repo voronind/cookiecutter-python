@@ -90,12 +90,12 @@ def poetry_init():
             doc['tool']['poetry']['classifiers'] = classifiers
 
 
-def git():
+def git_init():
     subprocess.check_call(['git', 'init'])
     subprocess.check_call(['pre-commit', 'install'])
     # subprocess.check_call(['pre-commit', 'autoupdate'])
-    subprocess.check_call(['git', 'add', '.'])
     subprocess.check_call(['git', 'remote', 'add', 'origin', '{{ cookiecutter.__git_ssh }}'])
+
 
 def poetry_dynamic_versioning():
     if '{{ cookiecutter.poetry_dynamic_versioning }}' != 'y':
@@ -105,7 +105,7 @@ def poetry_dynamic_versioning():
         doc['tool']['poetry']['version'] = '0'
         doc['tool'].append('poetry-dynamic-versioning', {
             'enable': True,
-            'strict': True,
+            'strict': False,    # Turn on later
             'latest-tag': True,
         })
         doc['build-system']['requires'].append('poetry-dynamic-versioning>=1.0.0,<2.0.0')
@@ -113,14 +113,23 @@ def poetry_dynamic_versioning():
 
 
 def main():
+    testing = os.environ.get('TESTING') == '1'
+
     lisense()
     pytest()
     sphinx_quickstart()
     poetry_init()
-    if os.environ.get('TESTING') != '1':
+    if not testing:
         subprocess.check_call(['poetry', 'install', '--no-root'])
-        git()
+        git_init()
+
+    # Add plugin after `poetry install` to avoid error
     poetry_dynamic_versioning()
+
+    if not testing:
+        subprocess.check_call(['git', 'add', '.'])
+        if shutil.which('direnv'):
+            subprocess.check_call(['direnv', 'allow'])
 
     print(NEXT_STEPS)
 

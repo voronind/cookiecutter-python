@@ -12,3 +12,5 @@ load-plugins=pylint.extensions.no_self_use
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
 disable=fixme,
+        missing-module-docstring,
+        missing-function-docstring,

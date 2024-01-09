@@ -21,15 +21,15 @@ pip install {{ cookiecutter.project_name }}
 
 Development
 -----------
-We need installed `pyenv` and `pipenv`.
+We need installed `poetry`.
 ```console
 git clone {{ cookiecutter.__git_ssh }}
 
 cd {{ cookiecutter.project_name }}
-pipenv install --dev
+poetry install --no-root
 ```
 
 Run tests:
 ```console
-pipenv run fulltest
+poetry run pytest
 ```
