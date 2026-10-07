@@ -1,5 +1,5 @@
 [project]
-name = "name-2"
+name = "cookiecutter-python"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -9,9 +9,11 @@ authors = [
 requires-python = ">=3.12"
 dependencies = []
 
-[project.scripts]
-name-2 = "name_2:main"
-
-[build-system]
-requires = ["uv_build>=0.12.19,<0.13.0"]
-build-backend = "uv_build"
+[dependency-groups]
+dev = [
+    "ipython ~= 9.17.1",
+    "ipython-autoimport ~= 0.5.1",
+    "pytest ~= 9.1.1",
+    "pytest-cookies ~= 0.7.0",
+    "tomlkit ~= 0.15.1",
+]

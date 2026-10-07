@@ -51,9 +51,9 @@ def sphinx_quickstart():
         'docs',
     ])
 
-def poetry_init():
+def uv_init():
     command = [
-        'poetry',
+        'uv',
         'init',
         '--no-interaction',
         '--description={{cookiecutter.project_description}}',
@@ -118,7 +118,7 @@ def main():
     lisense()
     pytest()
     sphinx_quickstart()
-    poetry_init()
+    uv_init()
     if not testing:
         subprocess.check_call(['poetry', 'install', '--no-root'])
         git_init()

@@ -10,11 +10,11 @@ cookiecutter gh:voronind/cookiecutter-python
 Development
 -----------
 ```commandline
-poetry install --no-root
+uv venv
 ```
 
 ### Testing
 
 ```commandline
-poetry run pytest
+uv run pytest
 ```
