@@ -52,42 +52,33 @@ def sphinx_quickstart():
     ])
 
 def uv_init():
-    command = [
+    subprocess.check_call([
         'uv',
         'init',
-        '--no-interaction',
-        '--description={{cookiecutter.project_description}}',
-        '--license={{cookiecutter.license}}',
-        '--author={{cookiecutter.full_name}} <{{cookiecutter.email}}>',
-        '--dev-dependency=ipython',
-    ]
+        '--name',
+        '{{cookiecutter.project_name}}',
+        '--description',
+        '{{cookiecutter.project_description}}',
+    ])
 
     if '{{ cookiecutter.pytest }}' == 'y':
-        command += [
-            '--dev-dependency=pytest',
-            '--dev-dependency=pytest-cov',
-            # '--dev-dependency=pytest-pythonpath',
-        ]
+        subprocess.check_call(['uv', 'add', '--dev', 'pytest'])
     if '{{ cookiecutter.sphinx }}' == 'y':
-        command += [
-            '--dev-dependency=sphinx',
-            '--dev-dependency=sphinx-autobuild',
-        ]
+        subprocess.check_call(['uv', 'add', '--dev', 'sphinx', 'sphinx-autobuild'])
 
-    subprocess.check_call(command)
 
-    with edit_toml('pyproject.toml') as doc:
-        doc['tool']['poetry']['homepage'] = "{{cookiecutter.__git_http}}"
-        doc['tool']['poetry']['repository'] = "{{cookiecutter.__git_http}}"
-
-        if '{{ cookiecutter.rtd }}' == 'y':
-            doc['tool']['poetry']['documentation'] = "https://readthedocs.io"
-
-        if '{{ cookiecutter.license }}' == 'Proprietary':
-            classifiers = tomlkit.array()
-            classifiers.add_line('Private :: Do Not Upload')
-            classifiers.add_line(indent='')
-            doc['tool']['poetry']['classifiers'] = classifiers
+    # with edit_toml('pyproject.toml') as doc:
+    #     doc['tool']['poetry']['homepage'] = "{{cookiecutter.__git_http}}"
+    #     doc['tool']['poetry']['repository'] = "{{cookiecutter.__git_http}}"
+    #
+    #     if '{{ cookiecutter.rtd }}' == 'y':
+    #         doc['tool']['poetry']['documentation'] = "https://readthedocs.io"
+    #
+    #     if '{{ cookiecutter.license }}' == 'Proprietary':
+    #         classifiers = tomlkit.array()
+    #         classifiers.add_line('Private :: Do Not Upload')
+    #         classifiers.add_line(indent='')
+    #         doc['tool']['poetry']['classifiers'] = classifiers
 
 
 def git_init():
@@ -97,19 +88,19 @@ def git_init():
     subprocess.check_call(['git', 'remote', 'add', 'origin', '{{ cookiecutter.__git_ssh }}'])
 
 
-def poetry_dynamic_versioning():
-    if '{{ cookiecutter.poetry_dynamic_versioning }}' != 'y':
-        return
-
-    with edit_toml('pyproject.toml') as doc:
-        doc['tool']['poetry']['version'] = '0'
-        doc['tool'].append('poetry-dynamic-versioning', {
-            'enable': True,
-            'strict': False,    # Turn on later
-            'latest-tag': True,
-        })
-        doc['build-system']['requires'].append('poetry-dynamic-versioning>=1.0.0,<2.0.0')
-        doc['build-system']['build-backend'] = 'poetry_dynamic_versioning.backend'
+# def poetry_dynamic_versioning():
+#     if '{{ cookiecutter.poetry_dynamic_versioning }}' != 'y':
+#         return
+#
+#     with edit_toml('pyproject.toml') as doc:
+#         doc['tool']['poetry']['version'] = '0'
+#         doc['tool'].append('poetry-dynamic-versioning', {
+#             'enable': True,
+#             'strict': False,    # Turn on later
+#             'latest-tag': True,
+#         })
+#         doc['build-system']['requires'].append('poetry-dynamic-versioning>=1.0.0,<2.0.0')
+#         doc['build-system']['build-backend'] = 'poetry_dynamic_versioning.backend'
 
 
 def main():
@@ -122,9 +113,6 @@ def main():
     if not testing:
         subprocess.check_call(['poetry', 'install', '--no-root'])
         git_init()
-
-    # Add plugin after `poetry install` to avoid error
-    poetry_dynamic_versioning()
 
     if not testing:
         subprocess.check_call(['git', 'add', '.'])
