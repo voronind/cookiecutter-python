@@ -1,5 +1,8 @@
 line-length = 120
 output-format = 'concise'
+exclude = [
+    '{{cookiecutter.project_name}}',
+]
 
 [lint]
 preview = true  # to enable RUF105 for ruff ignore comments
@@ -79,6 +82,11 @@ ignore = [
 'tests/**' = [
     'implicit-namespace-package',       # no __init__.py
     'assert',
+]
+'hooks/**' = [
+    'implicit-namespace-package',       # no __init__.py
+    'comparison-of-constant',           # if '{{ cookicutter.pytest }}' == 'y':
+    'start-process-with-partial-path',
 ]
 
 [lint.flake8-quotes]

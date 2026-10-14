@@ -1,23 +1,22 @@
 repos:
-    -   repo: https://github.com/asottile/pyupgrade
-        rev: v3.15.0
+    -   repo: https://github.com/astral-sh/ruff-pre-commit
+        rev: v0.16.9
         hooks:
-            -   id: pyupgrade
-                args: [--py36-plus]
-
-    -   repo: https://github.com/PyCQA/pylint
-        rev: v3.0.3
-        hooks:
-            -   id: pylint
+            -   id: ruff-check
 
     -   repo: https://github.com/PyCQA/flake8
-        rev: 5.0.4
+        rev: 7.4.1
         hooks:
             -   id: flake8
                 additional_dependencies:
-                    - flake8-broken-line==0.5.0
-                    - flake8-quotes==3.3.2
+                    - flake8-broken-line==1.0.0
 
+  {% if cookiecutter.git_hosting == 'github.com' -%}
+    -   repo: https://github.com/rhysd/actionlint
+        rev: v1.7.12
+        hooks:
+            -   id: actionlint
+  {% endif -%}
   {% if cookiecutter.git_hosting == 'gitlab.com' -%}
     # gitlab-ci-linter needs defined GITLAB_PRIVATE_TOKEN environment variable
     -   repo: https://gitlab.com/devopshq/gitlab-ci-linter

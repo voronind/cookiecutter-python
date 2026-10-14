@@ -1,19 +1,12 @@
-import os
-
-from pytest import fixture
+import pytest
 
 
-@fixture(scope='session', autouse=True)
-def environment_variable():
-    os.environ['TESTING'] = '1'
-
-
-@fixture()
+@pytest.fixture
 def project_path(cookies):
     extra_context = {
         'project_title': 'Project',
-
     }
+
     def _cookies_project_path(**context):
         result = cookies.bake(extra_context=dict(**extra_context, **context))
         assert result.exit_code == 0

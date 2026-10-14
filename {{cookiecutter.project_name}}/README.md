@@ -11,7 +11,7 @@
 [![codecov](https://codecov.io/gh/{{ cookiecutter.git_user }}/{{ cookiecutter.project_name }}/branch/master/graph/badge.svg)](https://codecov.io/gh/{{ cookiecutter.git_user }}/{{ cookiecutter.project_name }} "Coverage")
 {%- endif %}
 
-{{ cookiecutter.project_description }}
+{{ cookiecutter.description }}
 
 Install
 -------

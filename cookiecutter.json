@@ -2,10 +2,10 @@
     "project_title": "",
     "project_name": "{{ cookiecutter.project_title.lower().replace(' ', '-') }}",
     "__package_name": "{{ cookiecutter.project_name.replace('-', '_') }}",
-    "project_description": "",
+    "description": "",
 
     "license": ["MIT", "Proprietary"],
-    "poetry_dynamic_versioning": "y",
+    "dynamic_versioning": "y",
 
     "pytest": "y",
     "codecov": "{{ 'y' if cookiecutter.pytest == 'y' else 'n' }}",
@@ -24,9 +24,8 @@
     "__prompts__": {
         "project_title": "Project Title",
         "project_name": "Project Name",
-        "project_description": "Project Description",
 
-        "poetry_dynamic_versioning": "Use poetry-dynamic-versioning?",
+        "dynamic_versioning": "Use VCS dynamic versioning?",
         "pytest": "Use pytest?",
         "codecov": "Use codecov?",
 
@@ -36,6 +35,6 @@
         "email": "E-mail",
 
         "git_hosting": "Select git hosting",
-        "git_user": "Git user"
+        "git_user": "Git hosting user"
     }
 }

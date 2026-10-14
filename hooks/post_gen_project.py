@@ -1,40 +1,48 @@
 import contextlib
-import os
-import subprocess
 import shutil
+import subprocess
+from pathlib import Path
 
 import tomlkit
 
-NEXT_STEPS = """
-\033[1;32m  Next steps:  \033[1;m
 
-cd {{cookiecutter.project_name}}
+def insert_in_toml_table_after_key(
+    table: tomlkit.items.AbstractTable,
+    keys: list[str],
+    item: (tomlkit.items.Key, tomlkit.items.Item),
+):
+    table_keys = list(table.keys())
+    for key in keys:
+        if key in table_keys:
+            index = table_keys.index(key)
+            break
+    else:
+        raise LookupError
 
-git commit -m "Init commit"
-git tag --annotate -m Version v0.1
-git push -u origin master
-"""
+    table._value.body.insert(index + 1, item)       # ruff:ignore[private-member-access]
+
 
 @contextlib.contextmanager
 def edit_toml(file_path):
-    with open(file_path) as pyproject_toml:
-        doc = tomlkit.parse(pyproject_toml.read())
+    with Path.open(file_path) as toml_file:
+        doc = tomlkit.parse(toml_file.read())
 
     yield doc
 
-    with open(file_path, 'w') as pyproject_toml:
-        tomlkit.dump(doc, pyproject_toml)
+    with Path.open(file_path, 'w') as toml_file:
+        tomlkit.dump(doc, toml_file)
 
 
 def lisense():
     if '{{ cookiecutter.license }}' == 'Proprietary':
-        os.unlink('LICENSE')
+        Path.unlink('LICENSE')
 
 
 def pytest():
     if '{{ cookiecutter.pytest }}' != 'y':
-        os.unlink('pytest.ini')
+        Path.unlink('pytest.ini')
         shutil.rmtree('tests')
+
 
 def sphinx_quickstart():
     if '{{ cookiecutter.sphinx }}' != 'y':
@@ -51,75 +59,109 @@ def sphinx_quickstart():
         'docs',
     ])
 
+
 def uv_init():
-    subprocess.check_call([
+    uv_init_command = [
         'uv',
         'init',
         '--name',
         '{{cookiecutter.project_name}}',
         '--description',
-        '{{cookiecutter.project_description}}',
-    ])
+        '{{cookiecutter.description}}',
+    ]
+    if '{{ cookiecutter.dynamic_versioning }}' == 'y':
+        uv_init_command += ['--build-backend', 'hatch']
+
+    subprocess.check_call(uv_init_command)
 
     if '{{ cookiecutter.pytest }}' == 'y':
         subprocess.check_call(['uv', 'add', '--dev', 'pytest'])
     if '{{ cookiecutter.sphinx }}' == 'y':
         subprocess.check_call(['uv', 'add', '--dev', 'sphinx', 'sphinx-autobuild'])
 
+    project_urls = {
+        'repository': '{{cookiecutter.__git_http}}',
+    }
 
-    # with edit_toml('pyproject.toml') as doc:
-    #     doc['tool']['poetry']['homepage'] = "{{cookiecutter.__git_http}}"
-    #     doc['tool']['poetry']['repository'] = "{{cookiecutter.__git_http}}"
-    #
-    #     if '{{ cookiecutter.rtd }}' == 'y':
-    #         doc['tool']['poetry']['documentation'] = "https://readthedocs.io"
-    #
-    #     if '{{ cookiecutter.license }}' == 'Proprietary':
-    #         classifiers = tomlkit.array()
-    #         classifiers.add_line('Private :: Do Not Upload')
-    #         classifiers.add_line(indent='')
-    #         doc['tool']['poetry']['classifiers'] = classifiers
+    if '{{ cookiecutter.rtd }}' == 'y':
+        project_urls['documentation'] = 'https://{{cookiecutter.project_name}}.readthedocs.org'
+
+    with edit_toml('pyproject.toml') as doc:
+        doc['project']['urls'] = project_urls
+        doc['project']['urls'].add(None, tomlkit.ws('\n'))
+
+        if '{{ cookiecutter.license }}' == 'Proprietary':
+            classifiers = tomlkit.array()
+            classifiers.add_line('Private :: Do Not Upload')
+            classifiers.add_line(indent='')
+
+            insert_in_toml_table_after_key(
+                doc['project'],
+                ['authors'],
+                (tomlkit.key('classifiers'), classifiers),
+            )
+
+        if '{{ cookiecutter.dynamic_versioning }}' == 'y':
+            # replace version to dynamic
+            doc['build-system']['requires'].append('hatch-vcs')
+
+            hatch_version_raw_options = tomlkit.inline_table()
+            hatch_version_raw_options['local_scheme'] = 'no-local-version'
+            hatch_version_raw_options['local_scheme'].trivia.indent = ' '
+            hatch_version_raw_options['local_scheme'].trivia.trail = ' '
+
+            if 'tool' not in doc:
+                doc['tool'] = {}
+            doc['tool']['hatch'] = {
+                    'version': {
+                        'source': 'vcs',
+                        'raw-options': hatch_version_raw_options,
+                    },
+            }
+
+            dist_include = tomlkit.array()
+            dist_include.multiline(True)
+            dist_include.append('{{cookiecutter.__package_name}}')
+            dist_include.append('README.md')
+
+            doc['tool']['hatch']['build'] = {
+                'targets': {
+                    'sdist': {
+                        'include': dist_include,
+                    },
+                },
+            }
 
 
 def git_init():
     subprocess.check_call(['git', 'init'])
     subprocess.check_call(['pre-commit', 'install'])
-    # subprocess.check_call(['pre-commit', 'autoupdate'])
     subprocess.check_call(['git', 'remote', 'add', 'origin', '{{ cookiecutter.__git_ssh }}'])
 
 
-# def poetry_dynamic_versioning():
-#     if '{{ cookiecutter.poetry_dynamic_versioning }}' != 'y':
-#         return
-#
-#     with edit_toml('pyproject.toml') as doc:
-#         doc['tool']['poetry']['version'] = '0'
-#         doc['tool'].append('poetry-dynamic-versioning', {
-#             'enable': True,
-#             'strict': False,    # Turn on later
-#             'latest-tag': True,
-#         })
-#         doc['build-system']['requires'].append('poetry-dynamic-versioning>=1.0.0,<2.0.0')
-#         doc['build-system']['build-backend'] = 'poetry_dynamic_versioning.backend'
+def print_next_commands():
+    # Add pre-commit autoupdate
+    next_commands = """
+    \033[1;32m  Next steps:  \033[1;m
+
+cd {{cookiecutter.project_name}}
+
+git add .
+git commit -m "Init commit"
+
+git tag --annotate -m Version v0.1
+git push -u origin master
+    """
+    print(next_commands)    # ruff:ignore[print]
 
 
 def main():
-    testing = os.environ.get('TESTING') == '1'
-
     lisense()
     pytest()
     sphinx_quickstart()
     uv_init()
-    if not testing:
-        subprocess.check_call(['poetry', 'install', '--no-root'])
-        git_init()
-
-    if not testing:
-        subprocess.check_call(['git', 'add', '.'])
-        if shutil.which('direnv'):
-            subprocess.check_call(['direnv', 'allow'])
-
-    print(NEXT_STEPS)
+    git_init()
+    print_next_commands()
 
 
 if __name__ == '__main__':
