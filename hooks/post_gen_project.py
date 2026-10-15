@@ -24,24 +24,24 @@ def insert_in_toml_table_after_key(
 
 @contextlib.contextmanager
 def edit_toml(file_path):
-    with Path.open(file_path) as toml_file:
+    with Path(file_path).open() as toml_file:
         doc = tomlkit.parse(toml_file.read())
 
     yield doc
 
-    with Path.open(file_path, 'w') as toml_file:
+    with Path(file_path).open('w') as toml_file:
         tomlkit.dump(doc, toml_file)
 
 
 def lisense():
     if '{{ cookiecutter.license }}' == 'Proprietary':
-        Path.unlink('LICENSE')
+        Path('LICENSE').unlink()
 
 
 def pytest():
     if '{{ cookiecutter.pytest }}' != 'y':
-        Path.unlink('pytest.ini')
-        Path.unlink('.coveragerc')
+        Path('pytest.ini').unlink()
+        Path('.coveragerc').unlink()
         shutil.rmtree('tests')
 
 
@@ -103,6 +103,17 @@ def uv_init():
                 ['authors'],
                 (tomlkit.key('classifiers'), classifiers),
             )
+
+        if '{{ cookiecutter.dynamic_versioning }}' != 'y':
+            if 'tool' not in doc:
+                doc['tool'] = {}
+
+            if 'uv' not in doc['tool']:
+                doc['tool']['uv'] = {}
+
+            doc['tool']['uv']['build-backend'] = {
+                'module-root': '.',
+            }
 
 
 def dynamic_versioning():
