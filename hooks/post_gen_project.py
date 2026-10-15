@@ -175,11 +175,18 @@ def print_next_commands():
 
 cd {{cookiecutter.project_name}}
 
+pre-commit autoupdate
+{% if cookiecutter.git_hosting == 'github.com' -%}
+update-gha
+
+{% endif -%}
+
 git add .
 git commit -m "Init commit"
 
 git tag --annotate -m Version v0.1
-git push -u origin master
+
+git push --set-upstream origin main
     """
     print(next_commands)    # ruff:ignore[print]
 
