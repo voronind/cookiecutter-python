@@ -16,7 +16,7 @@
 Install
 -------
 ```commandline
-pip install {{ cookiecutter.project_name }}
+uv tool install {{ cookiecutter.project_name }}
 ```
 
 Development
@@ -26,10 +26,9 @@ We need installed `poetry`.
 git clone {{ cookiecutter.__git_ssh }}
 
 cd {{ cookiecutter.project_name }}
-poetry install --no-root
 ```
 
 Run tests:
 ```console
-poetry run pytest
+uv run pytest
 ```

@@ -53,11 +53,3 @@ Steps
     2 - gitlab.com
     Choose from [1/2] (1): 
   [13/13] Git user (voronind): 
-
-description_index = list(doc['project'].keys()).index('description')
-
-doc['project']._value.body.insert(
-    description_index + 1,
-    (tomlkit.key('urls'), project_urls)
-)
-
