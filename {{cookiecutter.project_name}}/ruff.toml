@@ -66,6 +66,7 @@ extend-select = [
     'RUF',      # Ruff
     'TRY',      # tryceratops
 ]
+allowed-confusables = ['с']
 
 [lint.per-file-ignores]
 'tests/**' = [

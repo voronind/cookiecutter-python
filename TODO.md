@@ -10,13 +10,6 @@ result repo
 
 ### Разное
 
-- uv
-    - hatch-vcs
-- check tselosnost` of README.md
-- Library: gitignore poetry.lock
-- Git
-    - local config Push --follow-tags by default
-      git config push.followTags true
 - Github actions:
     - test
     - coverage

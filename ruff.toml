@@ -69,6 +69,7 @@ extend-select = [
     'RUF',      # Ruff
     'TRY',      # tryceratops
 ]
+allowed-confusables = ['с']
 ignore = [
     'subprocess-without-shell-equals-true',
     'f-string-in-exception',

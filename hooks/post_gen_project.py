@@ -152,6 +152,13 @@ def dynamic_versioning():
 
 def git_init():
     subprocess.check_call(['git', 'init'])
+    # при отправки ветки отправляются и тэги, которые в ней находятся.
+    subprocess.check_call(['git', 'config', 'push.followTags', 'true'])
+    # перед получением списка веток с сервера сначала удаляются локальные копии веток, которых на сервере больше нет.
+    subprocess.check_call(['git', 'config', 'fetch.prune', 'true'])
+    # мержить только фaст-форвардом
+    subprocess.check_call(['git', 'config', 'merge.ff', 'only'])
+
     subprocess.check_call(['pre-commit', 'install'])
     subprocess.check_call(['git', 'remote', 'add', 'origin', '{{ cookiecutter.__git_ssh }}'])
 
