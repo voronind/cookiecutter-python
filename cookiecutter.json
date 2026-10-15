@@ -8,7 +8,6 @@
     "dynamic_versioning": "y",
 
     "pytest": "y",
-    "codecov": "{{ 'y' if cookiecutter.pytest == 'y' else 'n' }}",
 
     "sphinx": "n",
     "rtd": "{{ 'y' if cookiecutter.sphinx == 'y' else 'n' }}",
@@ -27,7 +26,6 @@
 
         "dynamic_versioning": "Use VCS dynamic versioning?",
         "pytest": "Use pytest?",
-        "codecov": "Use codecov?",
 
         "sphinx": "Use Sphinx?",
         "rtd": "Use Read the Docs?",

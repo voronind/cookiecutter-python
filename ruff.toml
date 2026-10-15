@@ -1,7 +1,7 @@
 line-length = 120
 output-format = 'concise'
-exclude = [
-    '{{cookiecutter.project_name}}',
+extend-exclude = [
+    '\{\{cookiecutter\.project_name\}\}',
 ]
 
 [lint]

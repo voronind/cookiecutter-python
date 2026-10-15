@@ -7,7 +7,7 @@
 {%- if cookiecutter.rtd == 'y' %}
 [![Docs](https://readthedocs.org/projects/{{ cookiecutter.project_name }}/badge/?version=stable)](https://{{ cookiecutter.project_name }}.readthedocs.io/en/latest/ "Read the docs")
 {%- endif %}
-{%- if cookiecutter.codecov == 'y' %}
+{%- if cookiecutter.pytest == 'y' %}
 [![codecov](https://codecov.io/gh/{{ cookiecutter.git_user }}/{{ cookiecutter.project_name }}/branch/master/graph/badge.svg)](https://codecov.io/gh/{{ cookiecutter.git_user }}/{{ cookiecutter.project_name }} "Coverage")
 {%- endif %}
 

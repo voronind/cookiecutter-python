@@ -1,12 +1,6 @@
 TODO
 ====
 
-Self repo
----------
-
-1. Lint it
-2. Test it
-
 result repo
 -----------
 

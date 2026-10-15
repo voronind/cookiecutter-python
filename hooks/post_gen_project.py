@@ -41,6 +41,7 @@ def lisense():
 def pytest():
     if '{{ cookiecutter.pytest }}' != 'y':
         Path.unlink('pytest.ini')
+        Path.unlink('.coveragerc')
         shutil.rmtree('tests')
 
 
@@ -73,9 +74,11 @@ def uv_init():
         uv_init_command += ['--build-backend', 'hatch']
 
     subprocess.check_call(uv_init_command)
+    shutil.rmtree('src')
 
     if '{{ cookiecutter.pytest }}' == 'y':
-        subprocess.check_call(['uv', 'add', '--dev', 'pytest'])
+        subprocess.check_call(['uv', 'add', '--dev', 'pytest', 'pytest-cov', 'python-xdist'])
+
     if '{{ cookiecutter.sphinx }}' == 'y':
         subprocess.check_call(['uv', 'add', '--dev', 'sphinx', 'sphinx-autobuild'])
 
@@ -101,6 +104,9 @@ def uv_init():
                 (tomlkit.key('classifiers'), classifiers),
             )
 
+
+def dynamic_versioning():
+    with edit_toml('pyproject.toml') as doc:
         if '{{ cookiecutter.dynamic_versioning }}' == 'y':
             # replace version to dynamic
             doc['build-system']['requires'].append('hatch-vcs')
@@ -160,6 +166,7 @@ def main():
     pytest()
     sphinx_quickstart()
     uv_init()
+    dynamic_versioning()
     git_init()
     print_next_commands()
 
