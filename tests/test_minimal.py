@@ -7,6 +7,7 @@ def test_minimal_project(min_project_path: Callable[[], Path]):
 
     project_dir_content = {file.name for file in path.iterdir()}
     assert project_dir_content == {
+        '.github',
         'ruff.toml',
         'LICENSE',
         '.editorconfig',

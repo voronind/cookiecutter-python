@@ -163,6 +163,11 @@ def git_init():
     subprocess.check_call(['git', 'remote', 'add', 'origin', '{{ cookiecutter.__git_ssh }}'])
 
 
+def git_hosting():
+    if '{{ cookiecutter.git_hosting }}' != 'github.com':
+        shutil.rmtree('.github')
+
+
 def print_next_commands():
     # Add pre-commit autoupdate
     next_commands = """
@@ -186,6 +191,7 @@ def main():
     uv_init()
     dynamic_versioning()
     git_init()
+    git_hosting()
     print_next_commands()
 
 
