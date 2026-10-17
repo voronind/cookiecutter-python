@@ -1,6 +1,6 @@
 [project]
 name = "cookiecutter-python"
-version = "0.1.0"
+version = "0.1.1"
 description = "Add your description here"
 readme = "README.md"
 authors = [
@@ -15,7 +15,6 @@ dev = [
     "ipython-autoimport ~= 0.5.1",
     "pytest ~= 9.1.1",
     "pytest-cookies ~= 0.7.0",
-    "tomlkit ~= 0.15.1",
 ]
 
 [tool.uv]

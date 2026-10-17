@@ -1,54 +1,47 @@
-import contextlib
 import shutil
 import subprocess
 from pathlib import Path
 
-import tomlkit
+"""
+Why `tomlkit` is shit.
+
+1. Can not insert random keys (e.g. `dependency-groups`)
+   between `project` and `project.scripts` document root keys.
+2. Two different dotted keys with common part creates additional upper-level key.
+3. Hard to add spaces.
+"""
 
 
-def _toml_mapping_key_index(
-    toml_mapping: tomlkit.TOMLDocument | tomlkit.items.AbstractTable,
-    keys: list[str],
-):
-    toml_mapping_keys = list(toml_mapping.keys())
-    for key in keys:
-        if key in toml_mapping_keys:
-            return toml_mapping_keys.index(key)
-    raise LookupError
+def line_index(lines, target_line):
+    for index, line in enumerate(lines):
+        if line.startswith(target_line):
+            return index
+    raise LookupError(target_line)
 
 
-def toml_insert_after_key(
-    toml_mapping: tomlkit.TOMLDocument | tomlkit.items.AbstractTable,
-    keys: list[str],
-    toml_item: (tomlkit.items.Key, tomlkit.items.Item),
-):
-    if isinstance(toml_mapping, tomlkit.TOMLDocument):  # ruff:ignore[if-else-block-instead-of-if-exp]
-        body = toml_mapping.body
-    else:
-        body = toml_mapping._value.body    # ruff:ignore[private-member-access]
-
-    index = _toml_mapping_key_index(toml_mapping, keys)
-    body.insert(index + 1, toml_item)
+def insert_after_line(lines, target_line: str, insert_lines: list[str]):
+    index = line_index(lines, target_line) + 1
+    lines[index:index] = insert_lines
 
 
-def toml_replace_key(
-    table: tomlkit.items.AbstractTable,
-    key: str,
-    item: (tomlkit.items.Key, tomlkit.items.Item),
-):
-    index = _toml_mapping_key_index(table, [key])
-    table._value.body[index] = item         # ruff:ignore[private-member-access]
+def insert_before_line(lines, target_line, insert_lines):
+    index = line_index(lines, target_line)
+    lines[index:index] = insert_lines
 
 
-@contextlib.contextmanager
-def edit_toml(file_path):
-    with Path(file_path).open() as toml_file:
-        doc = tomlkit.parse(toml_file.read())
+def replace_line(lines, target_line, insert_lines):
+    index = line_index(lines, target_line)
+    lines[index:index + 1] = insert_lines
 
-    yield doc
 
-    with Path(file_path).open('w') as toml_file:
-        tomlkit.dump(doc, toml_file)
+def read_pyproject_lines():
+    with Path('pyproject.toml').open('r') as file:
+        return file.readlines()
+
+
+def write_pyproject_lines(lines):
+    with Path('pyproject.toml').open('w') as file:
+        file.writelines(lines)
 
 
 def lisense():
@@ -87,6 +80,8 @@ def uv_init():
         '{{cookiecutter.project_name}}',
         '--description',
         '{{cookiecutter.description}}',
+        '--vcs',
+        'none',
     ]
     if '{{ cookiecutter.dynamic_versioning }}' == 'y':
         uv_init_command += ['--build-backend', 'hatch']
@@ -94,10 +89,48 @@ def uv_init():
     subprocess.check_call(uv_init_command)
     shutil.rmtree('src')
 
-    with edit_toml('pyproject.toml') as doc:
-        table = tomlkit.table()
-        table.add(None, tomlkit.ws('\n'))
-        toml_insert_after_key(doc, ['project'], (tomlkit.key('dependency-groups'), table))
+    lines = read_pyproject_lines()
+
+    project_urls = [
+        '[project.urls]\n',
+        'repository = "{{cookiecutter.__git_http}}"\n',
+    ]
+
+    if '{{ cookiecutter.rtd }}' == 'y':
+        project_urls.append('documentation = "https://{{cookiecutter.project_name}}.readthedocs.org"\n')
+
+    insert_after_line(
+        lines,
+        'dependencies = []',
+        ['\n', '[dependency-groups]\n', '\n', *project_urls],
+    )
+
+    if '{{ cookiecutter.license }}' == 'Proprietary':
+        classifiers = [
+            'classifiers = [\n',
+            '    "Private :: Do Not Upload",\n',
+            ']\n',
+        ]
+        insert_before_line(lines, 'requires-python = ', classifiers)
+
+    lines += ['\n']
+
+    if '{{ cookiecutter.dynamic_versioning }}' == 'y':
+        dynamic_versioning(lines)
+    else:
+        lines += [
+            '[tool.uv.build-backend]\n',
+            'module-root = ""\n',
+            '\n',
+        ]
+
+    lines += [
+        '[tool.uv]\n',
+        'preview-features = ["centralized-project-envs"]\n',
+        '\n',
+    ]
+
+    write_pyproject_lines(lines)
 
     if '{{ cookiecutter.pytest }}' == 'y':
         subprocess.check_call(['uv', 'add', '--dev', 'pytest', 'pytest-cov', 'pytest-xdist'])
@@ -105,79 +138,35 @@ def uv_init():
     if '{{ cookiecutter.sphinx }}' == 'y':
         subprocess.check_call(['uv', 'add', '--dev', 'sphinx', 'sphinx-autobuild'])
 
-    project_urls = {
-        'repository': '{{cookiecutter.__git_http}}',
-    }
 
-    if '{{ cookiecutter.rtd }}' == 'y':
-        project_urls['documentation'] = 'https://{{cookiecutter.project_name}}.readthedocs.org'
-
-    with edit_toml('pyproject.toml') as doc:
-        doc['project']['urls'] = project_urls
-        doc['project']['urls'].add(None, tomlkit.ws('\n'))
-
-        if '{{ cookiecutter.license }}' == 'Proprietary':
-            classifiers = tomlkit.array()
-            classifiers.add_line('Private :: Do Not Upload')
-            classifiers.add_line(indent='')
-
-            toml_insert_after_key(
-                doc['project'],
-                ['authors'],
-                (tomlkit.key('classifiers'), classifiers),
-            )
-
-        if '{{ cookiecutter.dynamic_versioning }}' != 'y':
-            if 'tool' not in doc:
-                doc['tool'] = {}
-
-            if 'uv' not in doc['tool']:
-                doc['tool']['uv'] = {}
-
-            doc['tool']['uv']['build-backend'] = {
-                'module-root': '',
-            }
-
-
-def dynamic_versioning():
+def dynamic_versioning(lines):
     if '{{ cookiecutter.dynamic_versioning }}' != 'y':
         return
 
-    with edit_toml('pyproject.toml') as doc:
-        toml_replace_key(
-            doc['project'],
-            'version',
-            (tomlkit.key('dynamic'), tomlkit.array('["version"]')),
-        )
+    replace_line(
+        lines,
+        'version = ',
+        ['dynamic = ["version"]\n'],
+    )
 
-        doc['build-system']['requires'].append('hatch-vcs')
+    replace_line(
+        lines,
+        'requires = ["hatchling"]',
+        ['requires = ["hatchling", "hatch-vcs"]\n'],
+    )
 
-        hatch_version_raw_options = tomlkit.inline_table()
-        hatch_version_raw_options['local_scheme'] = 'no-local-version'
-        hatch_version_raw_options['local_scheme'].trivia.indent = ' '
-        hatch_version_raw_options['local_scheme'].trivia.trail = ' '
-
-        if 'tool' not in doc:
-            doc['tool'] = {}
-        doc['tool']['hatch'] = {
-                'version': {
-                    'source': 'vcs',
-                    'raw-options': hatch_version_raw_options,
-                },
-        }
-
-        dist_include = tomlkit.array()
-        dist_include.multiline(True)
-        dist_include.append('{{cookiecutter.__package_name}}')
-        dist_include.append('README.md')
-
-        doc['tool']['hatch']['build'] = {
-            'targets': {
-                'sdist': {
-                    'include': dist_include,
-                },
-            },
-        }
+    lines += [
+        '[tool.hatch.version]\n',
+        'source = "vcs"\n',
+        'raw-options = { local_scheme = "no-local-version" }\n',
+        '\n',
+        '[tool.hatch.build.targets.sdist]\n',
+        'include = [\n',
+        '    "{{ cookiecutter.__package_name }}",\n',
+        '    "README.md",\n',
+        ']\n',
+        '\n',
+    ]
 
 
 def git_init():
@@ -226,7 +215,6 @@ def main():
     pytest()
     sphinx_quickstart()
     uv_init()
-    dynamic_versioning()
     git_init()
     git_hosting()
     print_next_commands()
