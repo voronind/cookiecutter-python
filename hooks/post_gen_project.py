@@ -6,32 +6,37 @@ from pathlib import Path
 import tomlkit
 
 
-def _toml_table_key_index(
-    table: tomlkit.items.AbstractTable,
+def _toml_mapping_key_index(
+    toml_mapping: tomlkit.TOMLDocument | tomlkit.items.AbstractTable,
     keys: list[str],
 ):
-    table_keys = list(table.keys())
+    toml_mapping_keys = list(toml_mapping.keys())
     for key in keys:
-        if key in table_keys:
-            return table_keys.index(key)
+        if key in toml_mapping_keys:
+            return toml_mapping_keys.index(key)
     raise LookupError
 
 
-def insert_in_toml_table_after_key(
-    table: tomlkit.items.AbstractTable,
+def toml_insert_after_key(
+    toml_mapping: tomlkit.TOMLDocument | tomlkit.items.AbstractTable,
     keys: list[str],
-    item: (tomlkit.items.Key, tomlkit.items.Item),
+    toml_item: (tomlkit.items.Key, tomlkit.items.Item),
 ):
-    index = _toml_table_key_index(table, keys)
-    table._value.body.insert(index + 1, item)       # ruff:ignore[private-member-access]
+    if isinstance(toml_mapping, tomlkit.TOMLDocument):  # ruff:ignore[if-else-block-instead-of-if-exp]
+        body = toml_mapping.body
+    else:
+        body = toml_mapping._value.body    # ruff:ignore[private-member-access]
+
+    index = _toml_mapping_key_index(toml_mapping, keys)
+    body.insert(index + 1, toml_item)
 
 
-def replace_toml_table_key(
+def toml_replace_key(
     table: tomlkit.items.AbstractTable,
     key: str,
     item: (tomlkit.items.Key, tomlkit.items.Item),
 ):
-    index = _toml_table_key_index(table, [key])
+    index = _toml_mapping_key_index(table, [key])
     table._value.body[index] = item         # ruff:ignore[private-member-access]
 
 
@@ -89,6 +94,11 @@ def uv_init():
     subprocess.check_call(uv_init_command)
     shutil.rmtree('src')
 
+    with edit_toml('pyproject.toml') as doc:
+        table = tomlkit.table()
+        table.add(None, tomlkit.ws('\n'))
+        toml_insert_after_key(doc, ['project'], (tomlkit.key('dependency-groups'), table))
+
     if '{{ cookiecutter.pytest }}' == 'y':
         subprocess.check_call(['uv', 'add', '--dev', 'pytest', 'pytest-cov', 'pytest-xdist'])
 
@@ -111,7 +121,7 @@ def uv_init():
             classifiers.add_line('Private :: Do Not Upload')
             classifiers.add_line(indent='')
 
-            insert_in_toml_table_after_key(
+            toml_insert_after_key(
                 doc['project'],
                 ['authors'],
                 (tomlkit.key('classifiers'), classifiers),
@@ -125,7 +135,7 @@ def uv_init():
                 doc['tool']['uv'] = {}
 
             doc['tool']['uv']['build-backend'] = {
-                'module-root': '.',
+                'module-root': '',
             }
 
 
@@ -134,7 +144,7 @@ def dynamic_versioning():
         return
 
     with edit_toml('pyproject.toml') as doc:
-        replace_toml_table_key(
+        toml_replace_key(
             doc['project'],
             'version',
             (tomlkit.key('dynamic'), tomlkit.array('["version"]')),
