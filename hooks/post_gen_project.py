@@ -6,20 +6,33 @@ from pathlib import Path
 import tomlkit
 
 
+def _toml_table_key_index(
+    table: tomlkit.items.AbstractTable,
+    keys: list[str],
+):
+    table_keys = list(table.keys())
+    for key in keys:
+        if key in table_keys:
+            return table_keys.index(key)
+    raise LookupError
+
+
 def insert_in_toml_table_after_key(
     table: tomlkit.items.AbstractTable,
     keys: list[str],
     item: (tomlkit.items.Key, tomlkit.items.Item),
 ):
-    table_keys = list(table.keys())
-    for key in keys:
-        if key in table_keys:
-            index = table_keys.index(key)
-            break
-    else:
-        raise LookupError
-
+    index = _toml_table_key_index(table, keys)
     table._value.body.insert(index + 1, item)       # ruff:ignore[private-member-access]
+
+
+def replace_toml_table_key(
+    table: tomlkit.items.AbstractTable,
+    key: str,
+    item: (tomlkit.items.Key, tomlkit.items.Item),
+):
+    index = _toml_table_key_index(table, [key])
+    table._value.body[index] = item         # ruff:ignore[private-member-access]
 
 
 @contextlib.contextmanager
@@ -77,7 +90,7 @@ def uv_init():
     shutil.rmtree('src')
 
     if '{{ cookiecutter.pytest }}' == 'y':
-        subprocess.check_call(['uv', 'add', '--dev', 'pytest', 'pytest-cov', 'python-xdist'])
+        subprocess.check_call(['uv', 'add', '--dev', 'pytest', 'pytest-cov', 'pytest-xdist'])
 
     if '{{ cookiecutter.sphinx }}' == 'y':
         subprocess.check_call(['uv', 'add', '--dev', 'sphinx', 'sphinx-autobuild'])
@@ -117,42 +130,49 @@ def uv_init():
 
 
 def dynamic_versioning():
+    if '{{ cookiecutter.dynamic_versioning }}' != 'y':
+        return
+
     with edit_toml('pyproject.toml') as doc:
-        if '{{ cookiecutter.dynamic_versioning }}' == 'y':
-            # replace version to dynamic
-            doc['build-system']['requires'].append('hatch-vcs')
+        replace_toml_table_key(
+            doc['project'],
+            'version',
+            (tomlkit.key('dynamic'), tomlkit.array('["version"]')),
+        )
 
-            hatch_version_raw_options = tomlkit.inline_table()
-            hatch_version_raw_options['local_scheme'] = 'no-local-version'
-            hatch_version_raw_options['local_scheme'].trivia.indent = ' '
-            hatch_version_raw_options['local_scheme'].trivia.trail = ' '
+        doc['build-system']['requires'].append('hatch-vcs')
 
-            if 'tool' not in doc:
-                doc['tool'] = {}
-            doc['tool']['hatch'] = {
-                    'version': {
-                        'source': 'vcs',
-                        'raw-options': hatch_version_raw_options,
-                    },
-            }
+        hatch_version_raw_options = tomlkit.inline_table()
+        hatch_version_raw_options['local_scheme'] = 'no-local-version'
+        hatch_version_raw_options['local_scheme'].trivia.indent = ' '
+        hatch_version_raw_options['local_scheme'].trivia.trail = ' '
 
-            dist_include = tomlkit.array()
-            dist_include.multiline(True)
-            dist_include.append('{{cookiecutter.__package_name}}')
-            dist_include.append('README.md')
-
-            doc['tool']['hatch']['build'] = {
-                'targets': {
-                    'sdist': {
-                        'include': dist_include,
-                    },
+        if 'tool' not in doc:
+            doc['tool'] = {}
+        doc['tool']['hatch'] = {
+                'version': {
+                    'source': 'vcs',
+                    'raw-options': hatch_version_raw_options,
                 },
-            }
+        }
+
+        dist_include = tomlkit.array()
+        dist_include.multiline(True)
+        dist_include.append('{{cookiecutter.__package_name}}')
+        dist_include.append('README.md')
+
+        doc['tool']['hatch']['build'] = {
+            'targets': {
+                'sdist': {
+                    'include': dist_include,
+                },
+            },
+        }
 
 
 def git_init():
     subprocess.check_call(['git', 'init'])
-    # при отправки ветки отправляются и тэги, которые в ней находятся.
+    # при отправке ветки отправляются и тэги, которые в ней находятся.
     subprocess.check_call(['git', 'config', 'push.followTags', 'true'])
     # перед получением списка веток с сервера сначала удаляются локальные копии веток, которых на сервере больше нет.
     subprocess.check_call(['git', 'config', 'fetch.prune', 'true'])
