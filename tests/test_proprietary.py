@@ -1,6 +1,10 @@
+import pytest
 
 
-def test_proprietary_license(min_project_path):
-    path = min_project_path(license='Proprietary')
+@pytest.fixture(scope='module')
+def context(context):
+    return context | {'license': 'Proprietary'}
 
-    assert not (path / 'LICENSE').is_file()
+
+def test_proprietary_license(project_path):
+    assert not (project_path / 'LICENSE').is_file()
