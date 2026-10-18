@@ -80,8 +80,6 @@ def uv_init():
         '{{cookiecutter.project_name}}',
         '--description',
         '{{cookiecutter.description}}',
-        '--vcs',
-        'none',
     ]
     if '{{ cookiecutter.dynamic_versioning }}' == 'y':
         uv_init_command += ['--build-backend', 'hatch']
