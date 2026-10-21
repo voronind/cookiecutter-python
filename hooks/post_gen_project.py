@@ -61,13 +61,16 @@ def sphinx_quickstart():
         return
 
     subprocess.check_call([
+        'uv',
+        'run',
         'sphinx-quickstart',
         '--quiet',
-        '-p',
-        '{{cookiecutter.project_title}}',
-        '-a',
-        '{{cookiecutter.full_name}}',
-        '--ext-doctest',
+        '--project',
+        '{{ cookiecutter.project_title }}',
+        '--author',
+        '{{ cookiecutter.full_name }}',
+        '--extensions',
+        'autobuild',
         'docs',
     ])
 
@@ -211,8 +214,8 @@ git push --set-upstream origin main
 def main():
     lisense()
     pytest()
-    sphinx_quickstart()
     uv_init()
+    sphinx_quickstart()
     git_init()
     git_hosting()
     print_next_commands()

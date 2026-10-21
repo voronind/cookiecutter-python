@@ -1,0 +1,4 @@
+self-hosted-runner:
+    labels:
+        # Github adds available releases later
+        - ubuntu-26.04

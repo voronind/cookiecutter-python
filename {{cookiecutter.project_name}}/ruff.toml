@@ -69,6 +69,12 @@ extend-select = [
 allowed-confusables = ['с']
 
 [lint.per-file-ignores]
+'docs/conf.py' = [
+    'implicit-namespace-package',       # no __init__.py
+    'commented-out-code',
+    'builtin-variable-shadowing',       # copyright variable
+    'missing-newline-at-end-of-file',
+]
 'tests/**' = [
     'implicit-namespace-package',       # no __init__.py
     'assert',
