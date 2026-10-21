@@ -16,8 +16,7 @@ repos:
         rev: v1.7.12
         hooks:
             -   id: actionlint
-    {% endif -%}
-    {% if cookiecutter.git_hosting == 'gitlab.com' -%}
+    {% elif cookiecutter.git_hosting == 'gitlab.com' -%}
     # gitlab-ci-linter needs defined GITLAB_PRIVATE_TOKEN environment variable
     -   repo: https://gitlab.com/devopshq/gitlab-ci-linter
         rev: v1.0.6
@@ -25,4 +24,11 @@ repos:
             -   id: gitlab-ci-linter
                 args:
                     - '--project={{ cookiecutter.git_user }}/{{ cookiecutter.project_name }}'
+
     {% endif -%}
+
+exclude: |
+    (?x)
+    (
+        ^docs/_build/
+    )
