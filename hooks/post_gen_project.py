@@ -93,12 +93,17 @@ def uv_init():
     lines = read_pyproject_lines()
 
     project_urls = [
-        '[project.urls]\n',
-        'repository = "{{cookiecutter.__git_http}}"\n',
+        'urls.repository = "{{cookiecutter.__git_http}}"\n',
     ]
 
     if '{{ cookiecutter.rtd }}' == 'y':
-        project_urls.append('documentation = "https://{{cookiecutter.project_name}}.readthedocs.org"\n')
+        project_urls.append('urls.documentation = "https://{{cookiecutter.project_name}}.readthedocs.org"\n')
+
+    insert_before_line(
+        lines,
+        'requires-python = ',
+        project_urls,
+    )
 
     insert_after_line(
         lines,
