@@ -108,7 +108,7 @@ def uv_init():
     insert_after_line(
         lines,
         'dependencies = []',
-        ['\n', '[dependency-groups]\n', '\n', *project_urls],
+        ['\n', '[dependency-groups]\n', '\n'],
     )
 
     if '{{ cookiecutter.license }}' == 'Proprietary':
