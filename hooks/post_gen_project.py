@@ -74,6 +74,9 @@ def sphinx_quickstart():
         'docs',
     ])
 
+    # Git doesn't like CRLF line terminators
+    Path('docs/make.bat').unlink()
+
 
 def uv_init():
     uv_init_command = [
