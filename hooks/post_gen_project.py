@@ -177,6 +177,8 @@ def dynamic_versioning(lines):
 
 def git_init():
     subprocess.check_call(['git', 'init'])
+    subprocess.check_call(['git', 'config', 'user.name', '{{ cookiecutter.full_name }}'])
+    subprocess.check_call(['git', 'config', 'user.email', '{{ cookiecutter.email }}'])
     # при отправке ветки отправляются и тэги, которые в ней находятся.
     subprocess.check_call(['git', 'config', 'push.followTags', 'true'])
     # перед получением списка веток с сервера сначала удаляются локальные копии веток, которых на сервере больше нет.
