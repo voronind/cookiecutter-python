@@ -1,3 +1,4 @@
 [run]
 branch = true
-source = "{{cookiecutter.__package_name}}/"
+source =
+    {{cookiecutter.__package_name}}/
