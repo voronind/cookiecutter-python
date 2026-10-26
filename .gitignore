@@ -1,9 +1,8 @@
-.*
-!.editorconfig
-!.gitignore
-!/.coveragerc
-!/.flake8
-!/.pre-commit-config.yaml
+.DS_Store/
+
+# direnv
+/.envrc
 
 # Python
 __pycache__/
+/.coverage
