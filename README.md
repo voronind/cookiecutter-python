@@ -16,5 +16,5 @@ uv venv
 ### Testing
 
 ```commandline
-uv run pytest
+uv run pytest --keep-baked-projects
 ```

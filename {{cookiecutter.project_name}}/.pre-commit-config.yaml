@@ -24,8 +24,7 @@ repos:
             -   id: gitlab-ci-linter
                 args:
                     - '--project={{ cookiecutter.git_user }}/{{ cookiecutter.project_name }}'
-
-    {% endif -%}
+    {%- endif %}
 
 exclude: |
     (?x)
