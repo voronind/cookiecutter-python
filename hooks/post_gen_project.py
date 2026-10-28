@@ -114,13 +114,22 @@ def uv_init():
         ['\n', '[dependency-groups]\n', '\n'],
     )
 
+    classifiers = []
+
     if '{{ cookiecutter.license }}' == 'Proprietary':
-        classifiers = [
+        classifiers.append('    "Private :: Do Not Upload",\n')
+
+    classifiers.append('    "Programming Language :: Python :: 3.12",\n')
+
+    insert_before_line(
+        lines,
+        'requires-python = ',
+        [
             'classifiers = [\n',
-            '    "Private :: Do Not Upload",\n',
+            *classifiers,
             ']\n',
-        ]
-        insert_before_line(lines, 'requires-python = ', classifiers)
+        ],
+    )
 
     lines += ['\n']
 
